@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Rating</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      color: #e2e8f0;
+      background-color: #0a0a0a;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #161616;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      color: #ffffff;
+      margin-bottom: 2rem;
+      text-align: center;
+      font-size: 3rem;
+      font-style: italic;
+      letter-spacing: -0.5px;
+    }
+    #uploadForm {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .file-input-container {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 2.5rem;
+      border-radius: 12px;
+      text-align: center;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    .file-input-container:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    input[type="file"] {
+      margin-bottom: 1.5rem;
+      color: #ffffff;
+    }
+    input[type="file"]::file-selector-button {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 1rem;
+      transition: all 0.3s ease;
+    }
+    input[type="file"]::file-selector-button:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    button {
+      background-color: #ffffff;
+      color: #000000;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    #result {
+      margin-top: 2.5rem;
+    }
+    .loading {
+      text-align: center;
+      color: #ffffff;
+      font-style: italic;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+    }
+    .rating-card {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 2rem;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+    }
+    .rating-category {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .rating-category:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .rating-category h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: #ffffff;
+      margin: 0;
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
+    }
+    .rating-score {
+      background-color: #ffffff;
+      color: #000000;
+      padding: 0.4rem 1rem;
+      border-radius: 99px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .rating-category p {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.7;
+      margin-top: 0.75rem;
+      font-size: 1rem;
+    }
+    .error {
+      color: #ff8080;
+      padding: 1.25rem;
+      background: rgba(255, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-top: 1rem;
+      border: 1px solid rgba(255, 0, 0, 0.2);
+    }
+    h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: #ffffff;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+      letter-spacing: -0.5px;
+    }
+    .overall-rating {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .overall-rating h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: #ffffff;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .overall-score {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1rem;
+    }
+    .overall-feedback {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Resume Rating Assistant</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <div class="file-input-container">
+        <input type="file" name="resume" accept="application/pdf" required />
+        <button type="submit">Analyze Resume</button>
+      </div>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      const fileField = document.querySelector('input[name="resume"]');
+      formData.append('resume', fileField.files[0]);
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '<div class="loading">Analyzing your resume... Please wait.</div>';
+
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          const feedback = data.ratings.candidates[0].content.parts[0].text;
+          
+          // Parse the feedback into sections and clean up the text
+          const sections = feedback
+            .split('\n\n')
+            .filter(section => section.trim())
+            .map(section => section.replace(/\*+/g, '').trim()); // Remove all asterisks
+          
+          let formattedHTML = '<h2>Resume Analysis Results</h2>';
+          
+          // Handle overall rating first
+          const overallSection = sections.find(section => section.toLowerCase().includes('overall resume rating'));
+          if (overallSection) {
+            const overallLines = overallSection.split('\n');
+            const overallRating = overallLines.find(line => line.toLowerCase().includes('rating'));
+            const overallScore = overallRating ? overallRating.match(/\d+(\.\d+)?\/100/) : null;
+            const overallFeedback = overallLines.slice(2).join('\n').trim();
+            
+            formattedHTML += `
+              <div class="overall-rating">
+                <h3>Overall Rating</h3>
+                ${overallScore ? `<div class="overall-score">${overallScore[0]}</div>` : ''}
+                ${overallFeedback ? `<p class="overall-feedback">${overallFeedback}</p>` : ''}
+              </div>
+            `;
+          }
+          
+          formattedHTML += '<div class="rating-card">';
+          
+          // Process other sections (excluding overall rating)
+          sections
+            .filter(section => !section.toLowerCase().includes('overall resume rating'))
+            .forEach(section => {
+              const [title, ...contentLines] = section.split('\n');
+              const titleText = title.replace(/^\d+\.\s*/, '').trim();
+              
+              // Find the rating line
+              const ratingLine = contentLines.find(line => line.toLowerCase().includes('rating'));
+              const rating = ratingLine ? ratingLine.match(/\d+(\.\d+)?\/100/) : null;
+              
+              // Get remaining content (excluding rating line)
+              const contentText = contentLines
+                .filter(line => line !== ratingLine)
+                .join('\n')
+                .trim();
+              
+              if (titleText) {
+                formattedHTML += `
+                  <div class="rating-category">
+                    <div class="category-header">
+                      <h3>${titleText}</h3>
+                      ${rating ? `<div class="rating-score">${rating[0]}</div>` : ''}
+                    </div>
+                    ${contentText ? `<p>${contentText}</p>` : ''}
+                  </div>
+                `;
+              }
+            });
+          
+          formattedHTML += '</div>';
+          resultDiv.innerHTML = formattedHTML;
+        } else {
+          resultDiv.innerHTML = `<div class="error">Error: ${data.message}</div>`;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = '<div class="error">Error uploading resume. Please try again.</div>';
+      }
+    });
+  </script>
+</body>
+</html>
